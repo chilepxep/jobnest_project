@@ -1,0 +1,91 @@
+{
+    "menu": [
+        {
+            "menuHeader": "Quản lý việc làm"
+        },
+        {
+            "name": "Đang hoạt động",
+            "icon": "menu-icon icon-base bx bx-clipboard",
+            "slug": "app-email",
+            "target": "_blank"
+        },
+        {
+            "name": "Đã tạm dừng",
+            "icon": "menu-icon icon-base bx bx-calendar-exclamation",
+            "slug": "app-email",
+            "target": "_blank"
+        },
+        {
+            "name": "Đã hết hạn",
+            "icon": "menu-icon icon-base bx bx-task-x",
+            "slug": "app-email",
+            "target": "_blank"
+        },
+
+        {
+            "menuHeader": "Quản lý ứng viên"
+        },
+        {
+            "name": "Đã được chọn",
+            "icon": "menu-icon icon-base bx bx-user-check",
+            "slug": "app-email",
+            "target": "_blank"
+        },
+        {
+            "name": "Được yêu thích",
+            "icon": "menu-icon icon-base bx bx-happy-heart-eyes",
+            "slug": "app-email",
+            "target": "_blank"
+        },
+        {
+            "name": "Đã từ chối",
+            "icon": "menu-icon icon-base bx bx-user-minus",
+            "slug": "app-email",
+            "target": "_blank"
+        },
+
+        {
+            "menuHeader": "Tiện ích"
+        },
+        {
+            "name": "Tải danh sách ứng viên",
+            "icon": "menu-icon icon-base bx bx-download",
+            "slug": "app-email",
+            "target": "_blank"
+        },
+        {
+            "name": "Hồ sơ công ty",
+            "icon": "menu-icon icon-base bx bx-edit",
+            "slug": "app-email",
+            "target": "_blank"
+        },
+        {
+            "name": "Liên hệ ứng viên",
+            "icon": "menu-icon icon-base bx bx-mail-send",
+            "slug": "app-email",
+            "target": "_blank"
+        },
+
+        {
+            "menuHeader": "Thiết lập cá nhân"
+        },
+        {
+            "name": "Thông tin cá nhân",
+            "icon": "menu-icon icon-base bx bx-user",
+            "slug": "app-email",
+            "target": "_blank"
+        },
+        {
+            "name": "Đăng xuất",
+            "icon": "menu-icon icon-base bx bx-log-out",
+            "slug": "app-email",
+            "target": "_blank"
+        },
+        {
+            "name": "Hổ trợ",
+            "icon": "menu-icon icon-base bx bx-help-circle",
+            "slug": "app-email",
+            "target": "_blank"
+        }
+    ]
+}
