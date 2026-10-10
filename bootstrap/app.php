@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -11,7 +12,22 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        
+        $middleware->alias([
+            'employer.approved'     => \App\Http\Middleware\CheckEmployerApproved::class,  
+        ]);
+
+        $middleware->redirectUsersTo(function (Request $request) {
+            $role = $request->user()?->role;
+
+            return match ($role) {
+                'employer'  => '/employer/dashboard',
+                'candidate' => '/candidate/dashboard',
+                'admin'     => '/admin/dashboard',
+                default     => '/', 
+            };
+        });
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

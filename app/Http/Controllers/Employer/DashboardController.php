@@ -17,7 +17,7 @@ class DashboardController extends Controller
 
     public function index()
     {
-        // 1. Tài khoản HR + công ty (chỉ lấy các cột view cần dùng)
+        // 1. Tài khoản HR + công ty 
         $employer = Employer::with('company:id,ten_cong_ty')
             ->select('id', 'user_id', 'company_id', 'ho_ten', 'chuc_vu')
             ->where('user_id', Auth::id())
@@ -27,7 +27,7 @@ class DashboardController extends Controller
             abort(403, 'Tài khoản của bạn chưa được liên kết với công ty nào.');
         }
  
-        // 2. Số liệu thống kê tính theo CÔNG TY (không phải theo từng HR) nên cache chung
+        // 2. Số liệu thống kê tính theo CÔNG TY nên cache chung
         //    cho mọi HR cùng công ty. Chỉ cache mảng thuần, không cache Eloquent model.
         $stats = Cache::remember(
             self::cacheKey($employer->company_id),

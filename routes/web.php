@@ -1,56 +1,53 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\EmployerAuthController;
+use App\Http\Controllers\Employer\DashboardController;
+
 
 Route::get('/', function () {
     return view('welcome');
+})->name('homepage');;
+
+// Route lấy danh sách Quận/Huyện 
+Route::get('/api/districts/{province_id}', [App\Http\Controllers\Auth\EmployerAuthController::class, 'getDistricts'])->name('api.districts');
+
+// ==========================================
+// 2. NHÓM GUEST (CHỈ DÀNH CHO NGƯỜI CHƯA ĐĂNG NHẬP)
+// ==========================================
+Route::middleware('guest')->group(function () {
+    // Đăng nhập
+    Route::get('/employer/login', [EmployerAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/employer/login', [EmployerAuthController::class, 'login']);
+    
+    // Đăng ký Bước 1
+    Route::get('/employer/register', [EmployerAuthController::class, 'showRegisterStep1'])->name('employer.register.step1'); // Đã thêm tiền tố employer.
+    Route::post('/employer/register', [EmployerAuthController::class, 'processStep1']);
 });
 
-
-Route::get('/employer/dashboard', function () {
-    // 1. Tạo dữ liệu giả cho tài khoản (Sử dụng stdClass để giả lập Object lấy từ CSDL)
-    $employer = new \stdClass();
-    $employer->ho_ten = 'Nguyễn Văn Test';
-    $employer->chuc_vu = 'Trưởng phòng HR';
+// ==========================================
+// 3. NHÓM AUTH (BẮT BUỘC PHẢI ĐĂNG NHẬP)
+// ==========================================
+Route::middleware(['auth'])->group(function () {
     
-    $employer->company = new \stdClass();
-    $employer->company->ten_cong_ty = 'Công ty Cổ phần Công nghệ Jobnest';
+    // Đăng xuất
+    Route::post('/logout', [EmployerAuthController::class, 'logout'])->name('logout');
 
-    // 4. Tạo dữ liệu giả cho Biểu đồ
-    //tổng số ứng viên ứng tuyển theo tháng
-    $chartData = [6, 7, 9, 20, 10, 5];
-    //tổng tin ứng tuyển theo tháng
-    $chartDataTinTuyen = [3, 5, 7, 3, 1, 9];
-    //6 tháng gần nhất
-    $chartCategories = ['Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10'];
+    // Khu vực dành riêng cho Nhà tuyển dụng
+    Route::prefix('employer')->name('employer.')->group(function () {
+        
+        // Đăng ký thông tin Công ty (Bước 2)
+        Route::get('/register-company', [EmployerAuthController::class, 'showRegisterStep2'])->name('register.step2');
+        Route::post('/register-company', [EmployerAuthController::class, 'processStep2']);
+        
+        // Trang thông báo chờ duyệt (Bước 3)
+        Route::get('/pending-approval', [EmployerAuthController::class, 'showStep3Pending'])->name('pending');
 
-    //số ứng viên lần lượt đã được chọn đi và từ chối
-    $chartDataCircle = [50,96];
-    //tổng số ứng viên
-    $charDataTotelUngVien = 100;
-    $chartDataCircleLabel = ['Đã được chọn', 'Từ chối'];
-
-    // số tin tuyển dụng lần lượt là tin còn hoạt động, đã tạm dừng, đã hết hạn
-    $chartDataCircleTin = [12,5,9];
-    //tổng số bài tin đã đăng
-    $charDataTotelTin = 100;
-    $chartDataCircleLabelTin = ['Hoạt động','Tạm dừng', 'Hết Hạn'];
-
-    // 5. Trả về view kèm toàn bộ dữ liệu giả
-    return view('employer.dashboard', compact(
-        'employer', 
-        'chartData', 
-        'chartDataTinTuyen',
-        'chartCategories',
-        'charDataTotelUngVien',
-        'chartDataCircle',
-        'chartDataCircleLabel',
-        'chartDataCircleTin',
-        'charDataTotelTin',
-        'chartDataCircleLabelTin'
-    ));
-})->name('employer.dashboard');;
-
-// Route::get('/employer/dashboard', function () {
-//     return view('employer.dashboard');
-// })->name('employer.dashboard');
+        // Dashboard (Chỉ vào được khi Admin đã duyệt)
+        Route::middleware('employer.approved')->group(function () {
+            Route::get('/dashboard', [App\Http\Controllers\Employer\DashboardController::class, 'index'])->name('dashboard');
+        });
+        
+    }); // Kết thúc nhóm prefix employer
+    
+}); // Kết thúc nhóm auth
