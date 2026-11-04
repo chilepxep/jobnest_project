@@ -55,7 +55,7 @@ class EmployerAuthController extends Controller
     {
         // Chặn nếu đã có công ty rồi thì không cho vào lại trang này
         if (Auth::user()->employer) {
-            return redirect()->route('employer.dashboard'); // Middleware sẽ tự nắn dòng nếu chưa duyệt
+            return redirect()->route('employer.dashboard'); 
         }
 
         $industries = \App\Models\Industry::orderBy('ten_nganh', 'asc')->get(); 

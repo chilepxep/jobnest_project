@@ -132,7 +132,7 @@
             </div>
             @endif
 
-            <form action="{{ route('register.step1') }}" method="POST">
+            <form action="{{ route('employer.register.step1') }}" method="POST">
                 @csrf
 
                 <div class="mb-3">

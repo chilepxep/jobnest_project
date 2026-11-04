@@ -43,10 +43,24 @@ Route::middleware(['auth'])->group(function () {
         // Trang thông báo chờ duyệt (Bước 3)
         Route::get('/pending-approval', [EmployerAuthController::class, 'showStep3Pending'])->name('pending');
 
-        // Dashboard (Chỉ vào được khi Admin đã duyệt)
+        // Dashboard
         Route::middleware('employer.approved')->group(function () {
             Route::get('/dashboard', [App\Http\Controllers\Employer\DashboardController::class, 'index'])->name('dashboard');
         });
+
+            // Quản lý Tin tuyển dụng (3 trang theo menu Sidebar)
+        Route::get('/jobs/active', [App\Http\Controllers\Employer\JobController::class, 'activeJobs'])->name('jobs.active');
+        Route::get('/jobs/paused', [App\Http\Controllers\Employer\JobController::class, 'pausedJobs'])->name('jobs.paused');
+        Route::get('/jobs/expired', [App\Http\Controllers\Employer\JobController::class, 'expiredJobs'])->name('jobs.expired');
+
+        // Tạo mới, Xem, Sửa, Xóa & Đổi trạng thái nhanh
+        Route::get('/jobs/create', [App\Http\Controllers\Employer\JobController::class, 'create'])->name('jobs.create');
+        Route::post('/jobs', [App\Http\Controllers\Employer\JobController::class, 'store'])->name('jobs.store');
+        Route::get('/jobs/{job}', [App\Http\Controllers\Employer\JobController::class, 'show'])->name('jobs.show');
+        Route::get('/jobs/{job}/edit', [App\Http\Controllers\Employer\JobController::class, 'edit'])->name('jobs.edit');
+        Route::put('/jobs/{job}', [App\Http\Controllers\Employer\JobController::class, 'update'])->name('jobs.update');
+        Route::patch('/jobs/{job}/status', [App\Http\Controllers\Employer\JobController::class, 'changeStatus'])->name('jobs.status');
+        Route::delete('/jobs/{job}', [App\Http\Controllers\Employer\JobController::class, 'destroy'])->name('jobs.destroy');
         
     }); // Kết thúc nhóm prefix employer
     

@@ -4,22 +4,22 @@
             "menuHeader": "Quản lý việc làm"
         },
         {
+            "url": "/employer/jobs/active",
             "name": "Đang hoạt động",
             "icon": "menu-icon icon-base bx bx-clipboard",
-            "slug": "app-email",
-            "target": "_blank"
+            "slug": "employer.jobs.active"
         },
         {
+            "url": "/employer/jobs/paused",
             "name": "Đã tạm dừng",
             "icon": "menu-icon icon-base bx bx-calendar-exclamation",
-            "slug": "app-email",
-            "target": "_blank"
+            "slug": "employer.jobs.paused"
         },
         {
+            "url": "/employer/jobs/expired",
             "name": "Đã hết hạn",
             "icon": "menu-icon icon-base bx bx-task-x",
-            "slug": "app-email",
-            "target": "_blank"
+            "slug": "employer.jobs.expired"
         },
 
         {

@@ -24,7 +24,8 @@
                         </p>
 
 
-                        <a href="javascript:;" class="btn  btn-outline-success">Đăng tin tuyển dụng</a>
+                        <a href="{{ route('employer.jobs.create') }}" class="btn  btn-outline-success">Đăng tin tuyển
+                            dụng</a>
                     </div>
                 </div>
                 <div class="col-sm-5 text-center text-sm-left">

@@ -59,7 +59,7 @@
             </div>
             @endif
 
-            <form action="{{ route('employer.login') }}" method="POST">
+            <form action="{{ route('login') }}" method="POST">
                 @csrf
 
                 <div class="mb-3">
