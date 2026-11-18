@@ -137,14 +137,14 @@
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email đăng nhập (*)</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}"
-                        placeholder="hr@congty.com" required>
+                    <input type="email" class="form-control" id="email" name="email"
+                        value="{{ old('email', $step1Data['email'] ?? '') }}" placeholder="hr@congty.com" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="password" class="form-label">Mật khẩu (*)</label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="············"
-                        required>
+                    <input type="password" class="form-control" id="password" name="password"
+                        value="{{ old('password', $step1Data['password'] ?? '') }}" placeholder="············" required>
                 </div>
 
                 <div class="mb-3">
@@ -155,8 +155,8 @@
 
                 <div class="mb-4">
                     <label for="phone" class="form-label">Số điện thoại cá nhân</label>
-                    <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone') }}"
-                        placeholder="0901 234 567">
+                    <input type="text" class="form-control" id="phone" name="phone"
+                        value="{{ old('phone', $step1Data['phone'] ?? '') }}" placeholder="0901 234 567">
                 </div>
 
                 <button class="btn btn-success w-100" type="submit">Bước tiếp theo</button>

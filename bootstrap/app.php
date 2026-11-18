@@ -3,7 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request; 
+use Illuminate\Session\TokenMismatchException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -29,6 +30,10 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
-        //
+   ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->render(function (TokenMismatchException $e, Request $request) {
+            return redirect()->back()
+                ->withInput($request->except('password', '_token'))
+                ->with('error', 'Phiên làm việc đã hết hạn do bạn treo máy quá lâu. Vui lòng thao tác lại.');
+    });
     })->create();

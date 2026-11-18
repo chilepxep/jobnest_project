@@ -95,6 +95,16 @@
 
 @section('content')
 
+@if(session('success'))
+<div class="alert alert-success alert-dismissible d-flex align-items-center mb-4" role="alert">
+    <i class="bx bx-check-circle me-2 fs-4"></i>
+    <div>
+        {{ session('success') }}
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
 <div class="row g-0 w-100 m-0 bg-white">
     <!-- Bên trái: Nội dung thông báo -->
     <div class="col-12 col-lg-7 auth-form-side d-flex align-items-center justify-content-center p-4 p-md-5">

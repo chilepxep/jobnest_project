@@ -16,10 +16,18 @@ class Company extends Model
 
     protected static function boot()
     {
-        parent::boot();
+        parent::boot();   
         static::creating(function ($company) {
+            
             if (empty($company->slug)) {
-                $company->slug = Str::slug($company->ten_cong_ty) . '-' . time();
+                $base = Str::slug($company->ten_cong_ty) ?: 'cong-ty';
+                $slug = $base;
+                $i = 2;
+                while (static::where('slug', $slug)->exists()) {
+                    $slug = $base . '-' . $i++;
+                }
+
+                $company->slug = $slug;
             }
         });
     }
