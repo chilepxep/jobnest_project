@@ -515,25 +515,34 @@ $backRoute = match ($job->trang_thai) {
                                 <div class="mb-3">
                                     <label for="luong_toi_thieu" class="form-label">Lương tối thiểu</label>
                                     <div class="input-group">
-                                        <input type="number" class="form-control" id="luong_toi_thieu"
-                                            name="luong_toi_thieu"
-                                            value="{{ old('luong_toi_thieu', $job->luong_toi_thieu ? (int)$job->luong_toi_thieu : '') }}"
-                                            placeholder="VD: 10000000" min="0" step="500000">
+                                        <input type="number"
+                                            class="form-control @error('luong_toi_thieu') is-invalid @enderror"
+                                            id="luong_toi_thieu" name="luong_toi_thieu"
+                                            value="{{ old('luong_toi_thieu', $job->luong_toi_thieu !== null ? (int) $job->luong_toi_thieu : '') }}"
+                                            placeholder="VD: 10000000" min="0" step="1">
                                         <span class="input-group-text">₫</span>
                                     </div>
+                                    @error('luong_toi_thieu')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="luong_toi_da" class="form-label">Lương tối đa</label>
                                     <div class="input-group">
-                                        <input type="number" class="form-control" id="luong_toi_da" name="luong_toi_da"
-                                            value="{{ old('luong_toi_da', $job->luong_toi_da ? (int)$job->luong_toi_da : '') }}"
-                                            placeholder="VD: 25000000" min="0" step="500000">
+                                        <input type="number"
+                                            class="form-control @error('luong_toi_da') is-invalid @enderror"
+                                            id="luong_toi_da" name="luong_toi_da"
+                                            value="{{ old('luong_toi_da', $job->luong_toi_da !== null ? (int) $job->luong_toi_da : '') }}"
+                                            placeholder="VD: 25000000" min="0" step="1">
                                         <span class="input-group-text">₫</span>
                                     </div>
                                     <div class="text-danger small mt-1 d-none" id="salary_error">
                                         Lương tối đa phải lớn hơn hoặc bằng lương tối thiểu.
                                     </div>
+                                    @error('luong_toi_da')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="salary-preview" id="salary_preview">Chưa nhập mức lương</div>
@@ -633,48 +642,62 @@ $backRoute = match ($job->trang_thai) {
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3 py-3 px-4">
-                        <div class="d-flex align-items-center text-muted small">
-                            <i class="bx bx-info-circle text-primary fs-5 me-2"></i>
-                            <span>Mọi thay đổi sẽ được áp dụng ngay sau khi bạn bấm lưu.</span>
+                        {{-- Hiển thị cảnh báo nếu tin đang tuyển bị sửa nội dung --}}
+                        @if($job->ngay_dang !== null && in_array($job->trang_thai, ['dang_tuyen', 'da_dong',
+                        'het_han']))
+                        <div class="alert alert-info d-flex align-items-center mt-3 mb-0" role="alert">
+                            <i class="bx bx-info-circle me-2 fs-5"></i>
+                            <div>
+                                Lưu ý: Nếu bạn thay đổi <strong>Tiêu đề, Mô tả công việc, Yêu cầu ứng viên hoặc Quyền
+                                    lợi</strong>,
+                                tin sẽ tự động chuyển sang trạng thái <strong>Chờ duyệt</strong> để Admin kiểm tra lại.
+                            </div>
                         </div>
-                        <div class="d-flex flex-wrap gap-2 ms-auto">
-                            <a href="{{ $backRoute }}" class="btn btn-label-secondary px-4">
-                                Hủy bỏ
+                        @endif
+
+                        {{-- Hiển thị lỗi nếu vi phạm chuyển trạng thái --}}
+                        @error('action_status')
+                        <div class="alert alert-danger mt-3 mb-0">{{ $message }}</div>
+                        @enderror
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
+                                Quay lại
                             </a>
 
-                            <?php if ($job->trang_thai === 'nhap'): ?>
-                            <button type="submit" name="action_status" value="nhap"
-                                class="btn btn-outline-primary px-4">
-                                <i class="bx bx-save me-1"></i> Lưu bản nháp
+                            @if(in_array($job->trang_thai, ['nhap', 'tu_choi', 'cho_duyet']))
+                            {{-- Nhóm chưa duyệt: cho lưu nháp hoặc gửi duyệt --}}
+                            <button type="submit" name="action_status" value="nhap" class="btn btn-label-secondary">
+                                <i class="bx bx-save me-1"></i>
+                                {{ $job->trang_thai === 'cho_duyet' ? 'Rút về bản nháp' : 'Lưu bản nháp' }}
                             </button>
-                            <button type="submit" name="action_status" value="submit"
-                                class="btn btn-success px-4 fw-bold shadow-sm">
-                                <i class="bx bx-paper-plane me-1"></i> Gửi duyệt & Đăng tin
+
+                            <button type="submit" name="action_status" value="submit" class="btn btn-primary">
+                                <i class="bx bx-send me-1"></i>
+                                {{ $job->trang_thai === 'tu_choi' ? 'Lưu & Gửi duyệt lại' : 'Lưu & Gửi duyệt' }}
                             </button>
-                            <?php elseif ($job->trang_thai === 'tu_choi'): ?>
-                            <button type="submit" name="action_status" value="nhap"
-                                class="btn btn-outline-secondary px-4">
-                                Chuyển về Bản nháp
+
+                            @elseif($job->trang_thai === 'dang_tuyen')
+                            {{-- Tin đang tuyển: cho tạm dừng hoặc cập nhật --}}
+                            <button type="submit" name="action_status" value="da_dong" class="btn btn-outline-warning">
+                                <i class="bx bx-pause-circle me-1"></i> Lưu & Tạm dừng
                             </button>
-                            <button type="submit" name="action_status" value="submit"
-                                class="btn btn-success px-4 fw-bold shadow-sm">
-                                <i class="bx bx-paper-plane me-1"></i> Cập nhật & Gửi duyệt lại
+
+                            <button type="submit" name="action_status" value="submit" class="btn btn-primary">
+                                <i class="bx bx-check me-1"></i> Cập nhật tin
                             </button>
-                            <?php elseif ($job->trang_thai === 'het_han'): ?>
-                            <button type="submit" name="action_status" value="submit"
-                                class="btn btn-success px-4 fw-bold shadow-sm">
-                                <i class="bx bx-calendar-plus me-1"></i> Cập nhật & Gia hạn tin
+
+                            @elseif(in_array($job->trang_thai, ['da_dong', 'het_han']))
+                            {{-- Tin đã đóng / hết hạn: cho lưu giữ nguyên trạng thái HOẶC bật lại / gia hạn --}}
+                            <button type="submit" class="btn btn-label-secondary">
+                                <i class="bx bx-save me-1"></i> Chỉ lưu thay đổi
                             </button>
-                            <?php else: ?>
-                            <button type="submit" name="action_status" value="da_dong"
-                                class="btn btn-outline-warning px-4">
-                                <i class="bx bx-pause me-1"></i> Lưu & Tạm dừng tin
+
+                            <button type="submit" name="action_status" value="submit" class="btn btn-primary">
+                                <i class="bx bx-play-circle me-1"></i>
+                                {{ $job->trang_thai === 'het_han' ? 'Gia hạn & Đăng lại' : 'Lưu & Mở tuyển lại' }}
                             </button>
-                            <button type="submit" name="action_status" value="submit"
-                                class="btn btn-primary px-4 fw-bold shadow-sm">
-                                <i class="bx bx-check-double me-1"></i> Lưu thay đổi
-                            </button>
-                            <?php endif; ?>
+                            @endif
                         </div>
                     </div>
                 </div>

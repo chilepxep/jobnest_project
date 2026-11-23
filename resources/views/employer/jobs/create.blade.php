@@ -240,6 +240,7 @@ $oldSkills = (array) old('skill_ids', []);
                                 <select class="form-select select2-multiple" id="industry_ids" name="industry_ids[]"
                                     multiple="multiple" data-placeholder="Chọn tối đa 3 ngành nghề..." data-max="3"
                                     required>
+                                    @error('industry_ids') ... @enderror
                                     <?php foreach ($industries as $industry): ?>
                                     <option value="{{ $industry->id }}"
                                         <?php echo in_array($industry->id, $oldIndustries) ? 'selected' : ''; ?>>
@@ -353,6 +354,9 @@ $oldSkills = (array) old('skill_ids', []);
                                             </option>
                                             <?php endforeach; ?>
                                         </select>
+                                        @error("locations.$idx.province_id")
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <div class="col-md-4">
@@ -363,6 +367,9 @@ $oldSkills = (array) old('skill_ids', []);
                                             <option value="">-- Chọn Quận/Huyện --</option>
 
                                         </select>
+                                        @error("locations.$idx.district_id")
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <div class="col-md-4">
@@ -371,11 +378,19 @@ $oldSkills = (array) old('skill_ids', []);
                                             name="locations[{{ $idx }}][dia_chi_chi_tiet]"
                                             value="{{ $loc['dia_chi_chi_tiet'] ?? '' }}"
                                             placeholder="VD: Tầng 5, Tòa nhà ABC...">
+                                        @error("locations.$idx.dia_chi_chi_tiet")
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
                             <?php endforeach; ?>
                         </div>
+                        @error('locations')
+                        <div class="alert alert-danger py-2 px-3 small mt-2 mb-0">
+                            <i class="bx bx-error-circle me-1"></i> {{ $message }}
+                        </div>
+                        @enderror
                     </div>
                 </div>
 
@@ -411,24 +426,33 @@ $oldSkills = (array) old('skill_ids', []);
                                 <div class="mb-3">
                                     <label for="luong_toi_thieu" class="form-label">Lương tối thiểu</label>
                                     <div class="input-group">
-                                        <input type="number" class="form-control" id="luong_toi_thieu"
-                                            name="luong_toi_thieu" value="{{ old('luong_toi_thieu') }}"
-                                            placeholder="VD: 10000000" min="0" step="500000">
+                                        <input type="number"
+                                            class="form-control @error('luong_toi_thieu') is-invalid @enderror"
+                                            id="luong_toi_thieu" name="luong_toi_thieu"
+                                            value="{{ old('luong_toi_thieu') }}" placeholder="VD: 10000000" min="0"
+                                            step="1">
                                         <span class="input-group-text">₫</span>
                                     </div>
+                                    @error('luong_toi_thieu')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="luong_toi_da" class="form-label">Lương tối đa</label>
                                     <div class="input-group">
-                                        <input type="number" class="form-control" id="luong_toi_da" name="luong_toi_da"
-                                            value="{{ old('luong_toi_da') }}" placeholder="VD: 25000000" min="0"
-                                            step="500000">
+                                        <input type="number"
+                                            class="form-control @error('luong_toi_da') is-invalid @enderror"
+                                            id="luong_toi_da" name="luong_toi_da" value="{{ old('luong_toi_da') }}"
+                                            placeholder="VD: 25000000" min="0" step="1">
                                         <span class="input-group-text">₫</span>
                                     </div>
                                     <div class="text-danger small mt-1 d-none" id="salary_error">
                                         Lương tối đa phải lớn hơn hoặc bằng lương tối thiểu.
                                     </div>
+                                    @error('luong_toi_da')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="salary-preview" id="salary_preview">Chưa nhập mức lương</div>
@@ -531,17 +555,15 @@ $oldSkills = (array) old('skill_ids', []);
                             <span>Kiểm tra kỹ các thông tin bắt buộc (<span class="text-danger">*</span>) trước khi gửi
                                 xét duyệt hoặc lưu nháp.</span>
                         </div>
-                        <div class="d-flex flex-wrap gap-2 ms-auto">
-                            <a href="{{ route('employer.dashboard') }}" class="btn btn-label-secondary px-4">
-                                Hủy bỏ
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a href="{{ route('employer.jobs.active') }}" class="btn btn-outline-secondary">
+                                Hủy
                             </a>
-                            <button type="submit" name="action_status" value="nhap"
-                                class="btn btn-outline-primary px-4">
+                            <button type="submit" name="action_status" value="nhap" class="btn btn-label-secondary">
                                 <i class="bx bx-save me-1"></i> Lưu bản nháp
                             </button>
-                            <button type="submit" name="action_status" value="cho_duyet"
-                                class="btn btn-success px-4 fw-bold shadow-sm">
-                                <i class="bx bx-paper-plane me-1"></i> Đăng tin tuyển dụng
+                            <button type="submit" name="action_status" value="submit" class="btn btn-primary">
+                                <i class="bx bx-send me-1"></i> Gửi duyệt ngay
                             </button>
                         </div>
                     </div>
