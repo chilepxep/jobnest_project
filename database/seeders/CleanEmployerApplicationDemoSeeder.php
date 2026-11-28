@@ -68,7 +68,7 @@ class CleanEmployerApplicationDemoSeeder extends Seeder
         });
 
         // 7. Xóa file PDF mẫu trong storage
-        Storage::disk('public')->delete('cvs/demo-candidate-cv.pdf');
+        Storage::disk('local')->delete('cvs/demo-candidate-cv.pdf');
 
         $this->command->info('Đã dọn sạch toàn bộ dữ liệu demo (giữ nguyên dữ liệu thật và bảng packages).');
     }

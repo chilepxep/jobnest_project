@@ -26,14 +26,20 @@
             "menuHeader": "Quản lý ứng viên"
         },
         {
-            "name": "Đã được chọn",
-            "icon": "menu-icon icon-base bx bx-user-check",
+            "url": "/employer/applications",
+            "name": "Danh sách ứng viên",
+            "icon": "menu-icon icon-base bx bx-receipt",
+            "slug": "employer.applications"
+        },
+        {
+            "name": "Tải danh sách ứng viên",
+            "icon": "menu-icon icon-base bx bx-download",
             "slug": "app-email",
             "target": "_blank"
         },
         {
-            "name": "Được yêu thích",
-            "icon": "menu-icon icon-base bx bx-happy-heart-eyes",
+            "name": "Đã được chọn",
+            "icon": "menu-icon icon-base bx bx-user-check",
             "slug": "app-email",
             "target": "_blank"
         },

@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Controllers\Auth\EmployerAuthController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Employer\ApplicationController;
 
 
 Route::get('/', function () {
@@ -112,7 +112,15 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/jobs/{job}', [App\Http\Controllers\Employer\JobController::class, 'update'])->name('jobs.update');
             Route::patch('/jobs/{job}/status', [App\Http\Controllers\Employer\JobController::class, 'changeStatus'])->name('jobs.status');
             Route::delete('/jobs/{job}', [App\Http\Controllers\Employer\JobController::class, 'destroy'])->name('jobs.destroy');
-        });
+
+            //Quản lý ứng viên
+            Route::prefix('/applications')->name('applications.')->group(function () {
+            Route::get('/', [ApplicationController::class, 'index'])->name('index');
+            Route::get('/{application}', [ApplicationController::class, 'show'])->name('show');
+            Route::patch('/{application}/status', [ApplicationController::class, 'updateStatus'])->name('update-status');
+            Route::get('/{application}/cv', [ApplicationController::class, 'viewCv'])->name('cv');
+                });
+            });
 
         
     }); // Kết thúc nhóm prefix employer

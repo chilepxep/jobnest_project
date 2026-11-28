@@ -37,9 +37,9 @@ class EmployerApplicationDemoSeeder extends Seeder
 
         // Tạo 1 file PDF mẫu tối giản để test nút Xem/Tải CV không bị 404
         $demoCvPath = 'cvs/demo-candidate-cv.pdf';
-        if (!Storage::disk('public')->exists($demoCvPath)) {
+        if (!Storage::disk('local')->exists($demoCvPath)) {
             $minimalPdf = "%PDF-1.4\n1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj\n2 0 obj<< /Type /Pages /Kids [3 0 R] /Count 1 >>endobj\n3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] >>endobj\nxref\n0 4\n0000000000 65535 f \n0000000010 00000 n \n0000000060 00000 n \n0000000117 00000 n \ntrailer<< /Size 4 /Root 1 0 R >>\nstartxref\n190\n%%EOF";
-            Storage::disk('public')->put($demoCvPath, $minimalPdf);
+            Storage::disk('local')->put($demoCvPath, $minimalPdf);
         }
 
         DB::transaction(function () use ($employer, $provinceId, $districtId, $industryId, $skillIds, $demoCvPath) {
